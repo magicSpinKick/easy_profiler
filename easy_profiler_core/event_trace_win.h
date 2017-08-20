@@ -24,21 +24,21 @@
 *                   :
 *                   : Permission is hereby granted, free of charge, to any person obtaining a copy
 *                   : of this software and associated documentation files (the "Software"), to deal
-*                   : in the Software without restriction, including without limitation the rights 
-*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-*                   : of the Software, and to permit persons to whom the Software is furnished 
+*                   : in the Software without restriction, including without limitation the rights
+*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+*                   : of the Software, and to permit persons to whom the Software is furnished
 *                   : to do so, subject to the following conditions:
-*                   : 
-*                   : The above copyright notice and this permission notice shall be included in all 
+*                   :
+*                   : The above copyright notice and this permission notice shall be included in all
 *                   : copies or substantial portions of the Software.
-*                   : 
-*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+*                   :
+*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 *                   : USE OR OTHER DEALINGS IN THE SOFTWARE.
-*                   : 
+*                   :
 *                   : The Apache License, Version 2.0 (the "License")
 *                   :
 *                   : You may not use this file except in compliance with the License.
@@ -58,13 +58,13 @@
 #ifdef _WIN32
 
 #define INITGUID  // This is to enable using SystemTraceControlGuid in evntrace.h.
-#include <Windows.h>
 #include <Strsafe.h>
-#include <wmistr.h>
-#include <evntrace.h>
+#include <Windows.h>
 #include <evntcons.h>
-#include <thread>
+#include <evntrace.h>
+#include <wmistr.h>
 #include <atomic>
+#include <thread>
 #include "event_trace_status.h"
 #include "spin_lock.h"
 
@@ -73,57 +73,53 @@
 
 namespace profiler {
 
-    class EasyEventTracer EASY_FINAL
-    {
+class EasyEventTracer EASY_FINAL {
 #ifndef EASY_MAGIC_STATIC_CPP11
-        friend class EasyEventTracerInstance;
+  friend class EasyEventTracerInstance;
 #endif
 
 #pragma pack(push, 1)
-        struct Properties {
-            EVENT_TRACE_PROPERTIES base;
-            char sessionName[sizeof(KERNEL_LOGGER_NAME)];
-        };
+  struct Properties {
+    EVENT_TRACE_PROPERTIES base;
+    char sessionName[sizeof(KERNEL_LOGGER_NAME)];
+  };
 #pragma pack(pop)
 
-        ::std::thread       m_processThread;
-        Properties             m_properties;
-        EVENT_TRACE_LOGFILE         m_trace;
-        ::profiler::spin_lock        m_spin;
-        ::std::atomic_bool    m_lowPriority;
-        TRACEHANDLE         m_sessionHandle = INVALID_PROCESSTRACE_HANDLE;
-        TRACEHANDLE          m_openedHandle = INVALID_PROCESSTRACE_HANDLE;
-        bool                     m_bEnabled = false;
+  ::std::thread m_processThread;
+  Properties m_properties;
+  EVENT_TRACE_LOGFILE m_trace;
+  ::profiler::spin_lock m_spin;
+  ::std::atomic_bool m_lowPriority;
+  TRACEHANDLE m_sessionHandle = INVALID_PROCESSTRACE_HANDLE;
+  TRACEHANDLE m_openedHandle = INVALID_PROCESSTRACE_HANDLE;
+  bool m_bEnabled = false;
 
-    public:
+public:
+  static EasyEventTracer& instance();
+  ~EasyEventTracer();
 
-        static EasyEventTracer& instance();
-        ~EasyEventTracer();
+  bool isLowPriority() const;
 
-        bool isLowPriority() const;
+  ::profiler::EventTracingEnableStatus enable(bool _force = false);
+  void disable();
+  void setLowPriority(bool _value);
+  static void setProcessPrivileges();
 
-        ::profiler::EventTracingEnableStatus enable(bool _force = false);
-        void disable();
-        void setLowPriority(bool _value);
-        static void setProcessPrivileges();
+private:
+  EasyEventTracer();
 
-    private:
+  inline EVENT_TRACE_PROPERTIES* props() {
+    return reinterpret_cast<EVENT_TRACE_PROPERTIES*>(&m_properties);
+  }
 
-        EasyEventTracer();
+  ::profiler::EventTracingEnableStatus startTrace(bool _force, int _step = 0);
 
-        inline EVENT_TRACE_PROPERTIES* props()
-        {
-            return reinterpret_cast<EVENT_TRACE_PROPERTIES*>(&m_properties);
-        }
+};  // END of class EasyEventTracer.
 
-        ::profiler::EventTracingEnableStatus startTrace(bool _force, int _step = 0);
-
-    }; // END of class EasyEventTracer.
-
-} // END of namespace profiler.
+}  // END of namespace profiler.
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-#endif // _WIN32
-#endif // EASY_PROFILER_EVENT_TRACE_WINDOWS_H
+#endif  // _WIN32
+#endif  // EASY_PROFILER_EVENT_TRACE_WINDOWS_H

@@ -1,17 +1,17 @@
 /************************************************************************
 * file name         : easy_qtimer.h
-* ----------------- : 
+* ----------------- :
 * creation time     : 2016/12/05
 * author            : Victor Zarubkin
 * email             : v.s.zarubkin@gmail.com
-* ----------------- : 
+* ----------------- :
 * description       : This file contains declaration of EasyQTimer class used to
 *                   : connect QTimer to non-QObject classes.
-* ----------------- : 
+* ----------------- :
 * change log        : * 2016/12/05 Victor Zarubkin: Initial commit.
 *                   :
-*                   : * 
-* ----------------- : 
+*                   : *
+* ----------------- :
 * license           : Lightweight profiler library for c++
 *                   : Copyright(C) 2016-2017  Sergey Yagovtsev, Victor Zarubkin
 *                   :
@@ -24,21 +24,21 @@
 *                   :
 *                   : Permission is hereby granted, free of charge, to any person obtaining a copy
 *                   : of this software and associated documentation files (the "Software"), to deal
-*                   : in the Software without restriction, including without limitation the rights 
-*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-*                   : of the Software, and to permit persons to whom the Software is furnished 
+*                   : in the Software without restriction, including without limitation the rights
+*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+*                   : of the Software, and to permit persons to whom the Software is furnished
 *                   : to do so, subject to the following conditions:
-*                   : 
-*                   : The above copyright notice and this permission notice shall be included in all 
+*                   :
+*                   : The above copyright notice and this permission notice shall be included in all
 *                   : copies or substantial portions of the Software.
-*                   : 
-*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+*                   :
+*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 *                   : USE OR OTHER DEALINGS IN THE SOFTWARE.
-*                   : 
+*                   :
 *                   : The Apache License, Version 2.0 (the "License")
 *                   :
 *                   : You may not use this file except in compliance with the License.
@@ -61,29 +61,33 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-class EasyQTimer : public QObject
-{
-    Q_OBJECT
+class EasyQTimer : public QObject {
+  Q_OBJECT
 
 private:
-
-    QTimer                    m_timer;
-    ::std::function<void()> m_handler;
+  QTimer m_timer;
+  ::std::function<void()> m_handler;
 
 public:
+  EasyQTimer();
+  EasyQTimer(::std::function<void()>&& _handler, bool _isSignleShot = false);
+  virtual ~EasyQTimer();
 
-    EasyQTimer();
-    EasyQTimer(::std::function<void()>&& _handler, bool _isSignleShot = false);
-    virtual ~EasyQTimer();
+  void setHandler(::std::function<void()>&& _handler);
 
-    void setHandler(::std::function<void()>&& _handler);
+  inline void start(int msec) {
+    m_timer.start(msec);
+  }
+  inline void stop() {
+    if (m_timer.isActive())
+      m_timer.stop();
+  }
+  inline bool isActive() const {
+    return m_timer.isActive();
+  }
 
-    inline void start(int msec) { m_timer.start(msec); }
-    inline void stop() { if (m_timer.isActive()) m_timer.stop(); }
-    inline bool isActive() const { return m_timer.isActive(); }
-
-}; // END of class EasyQTimer.
+};  // END of class EasyQTimer.
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif // EASY__QTIMER__H
+#endif  // EASY__QTIMER__H

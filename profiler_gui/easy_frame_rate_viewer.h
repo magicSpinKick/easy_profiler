@@ -10,7 +10,7 @@
 * change log        : * 2017/04/02 Victor Zarubkin: Initial commit.
 *                   :
 *                   : *
-* ----------------- : 
+* ----------------- :
 * license           : Lightweight profiler library for c++
 *                   : Copyright(C) 2016-2017  Sergey Yagovtsev, Victor Zarubkin
 *                   :
@@ -23,21 +23,21 @@
 *                   :
 *                   : Permission is hereby granted, free of charge, to any person obtaining a copy
 *                   : of this software and associated documentation files (the "Software"), to deal
-*                   : in the Software without restriction, including without limitation the rights 
-*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-*                   : of the Software, and to permit persons to whom the Software is furnished 
+*                   : in the Software without restriction, including without limitation the rights
+*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+*                   : of the Software, and to permit persons to whom the Software is furnished
 *                   : to do so, subject to the following conditions:
-*                   : 
-*                   : The above copyright notice and this permission notice shall be included in all 
+*                   :
+*                   : The above copyright notice and this permission notice shall be included in all
 *                   : copies or substantial portions of the Software.
-*                   : 
-*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+*                   :
+*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 *                   : USE OR OTHER DEALINGS IN THE SOFTWARE.
-*                   : 
+*                   :
 *                   : The Apache License, Version 2.0 (the "License")
 *                   :
 *                   : You may not use this file except in compliance with the License.
@@ -55,71 +55,66 @@
 #ifndef EASY__FRAME_RATE_VIEWER__H
 #define EASY__FRAME_RATE_VIEWER__H
 
-#include <QGraphicsView>
-#include <QGraphicsItem>
-#include <QTimer>
-#include <vector>
-#include <deque>
 #include <easy/profiler.h>
+#include <QGraphicsItem>
+#include <QGraphicsView>
+#include <QTimer>
+#include <deque>
+#include <vector>
 
 //////////////////////////////////////////////////////////////////////////
 
-class EasyFPSGraphicsItem : public QGraphicsItem
-{
-    typedef QGraphicsItem                                  Parent;
-    typedef EasyFPSGraphicsItem                              This;
-    typedef std::deque<std::pair<uint32_t, uint32_t> > FrameTimes;
+class EasyFPSGraphicsItem : public QGraphicsItem {
+  typedef QGraphicsItem Parent;
+  typedef EasyFPSGraphicsItem This;
+  typedef std::deque<std::pair<uint32_t, uint32_t> > FrameTimes;
 
-    std::vector<QPointF> m_points1, m_points2;
-    FrameTimes                       m_frames;
-    QRectF                     m_boundingRect;
+  std::vector<QPointF> m_points1, m_points2;
+  FrameTimes m_frames;
+  QRectF m_boundingRect;
 
 public:
+  explicit EasyFPSGraphicsItem();
+  virtual ~EasyFPSGraphicsItem();
 
-    explicit EasyFPSGraphicsItem();
-    virtual ~EasyFPSGraphicsItem();
+  QRectF boundingRect() const override;
+  void paint(QPainter* _painter, const QStyleOptionGraphicsItem* _option, QWidget* _widget = nullptr) override;
 
-    QRectF boundingRect() const override;
-    void paint(QPainter* _painter, const QStyleOptionGraphicsItem* _option, QWidget* _widget = nullptr) override;
+  void setBoundingRect(const QRectF& _boundingRect);
+  void setBoundingRect(qreal x, qreal y, qreal w, qreal h);
 
-    void setBoundingRect(const QRectF& _boundingRect);
-    void setBoundingRect(qreal x, qreal y, qreal w, qreal h);
+  void clear();
+  void addPoint(uint32_t _maxFrameTime, uint32_t _avgFrameTime);
 
-    void clear();
-    void addPoint(uint32_t _maxFrameTime, uint32_t _avgFrameTime);
-
-}; // END of class EasyFPSGraphicsItem.
+};  // END of class EasyFPSGraphicsItem.
 
 //////////////////////////////////////////////////////////////////////////
 
-class EasyFrameRateViewer : public QGraphicsView
-{
-    Q_OBJECT
+class EasyFrameRateViewer : public QGraphicsView {
+  Q_OBJECT
 
 private:
+  typedef QGraphicsView Parent;
+  typedef EasyFrameRateViewer This;
 
-    typedef QGraphicsView       Parent;
-    typedef EasyFrameRateViewer   This;
-
-    EasyFPSGraphicsItem* m_fpsItem;
+  EasyFPSGraphicsItem* m_fpsItem;
 
 public:
+  explicit EasyFrameRateViewer(QWidget* _parent = nullptr);
+  virtual ~EasyFrameRateViewer();
 
-    explicit EasyFrameRateViewer(QWidget* _parent = nullptr);
-    virtual ~EasyFrameRateViewer();
-
-    void resizeEvent(QResizeEvent* _event) override;
-    void hideEvent(QHideEvent* _event) override;
-    void showEvent(QShowEvent* _event) override;
-    void contextMenuEvent(QContextMenuEvent* _event) override;
+  void resizeEvent(QResizeEvent* _event) override;
+  void hideEvent(QHideEvent* _event) override;
+  void showEvent(QShowEvent* _event) override;
+  void contextMenuEvent(QContextMenuEvent* _event) override;
 
 public slots:
 
-    void clear();
-    void addPoint(uint32_t _maxFrameTime, uint32_t _avgFrameTime);
+  void clear();
+  void addPoint(uint32_t _maxFrameTime, uint32_t _avgFrameTime);
 
-}; // END of class EasyFrameRateViewer.
+};  // END of class EasyFrameRateViewer.
 
 //////////////////////////////////////////////////////////////////////////
 
-#endif // EASY__FRAME_RATE_VIEWER__H
+#endif  // EASY__FRAME_RATE_VIEWER__H

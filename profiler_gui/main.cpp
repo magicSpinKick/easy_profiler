@@ -48,35 +48,34 @@
 *                   : limitations under the License.
 ************************************************************************/
 
-#include <chrono>
 #include <QApplication>
 #include <QFontDatabase>
 #include <QImageReader>
-#include <iostream>
 #include <QtPlugin>
+#include <chrono>
+#include <iostream>
 
-#include "main_window.h"
 #include "globals.h"
+#include "main_window.h"
 
 #include <easy/reader.h>
 
-
-#if defined(_WIN32) && defined (_BUILD_RELEASE_)
+#if defined(_WIN32) && defined(_BUILD_RELEASE_)
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
-int main(int argc, char **argv)
-{
-    QApplication app(argc, argv);
+int main(int argc, char **argv) {
+  QApplication app(argc, argv);
 
-    //Instanciate easy globals after QApplication to allow creation of global fonts, and on the main thread to avoid data races
-    EASY_GLOBALS;
+  // Instanciate easy globals after QApplication to allow creation of global fonts, and on the main thread to avoid data races
+  EASY_GLOBALS;
 
-    auto now = ::std::chrono::duration_cast<std::chrono::seconds>(::std::chrono::system_clock::now().time_since_epoch()).count() >> 1;
-    srand((unsigned int)now);
+  auto now
+      = ::std::chrono::duration_cast<std::chrono::seconds>(::std::chrono::system_clock::now().time_since_epoch()).count() >> 1;
+  srand((unsigned int)now);
 
-    EasyMainWindow window;
-    window.show();
+  EasyMainWindow window;
+  window.show();
 
-    return app.exec();
+  return app.exec();
 }

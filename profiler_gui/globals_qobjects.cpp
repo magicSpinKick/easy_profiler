@@ -59,14 +59,13 @@
 
 namespace profiler_gui {
 
-    EasyGlobalSignals::EasyGlobalSignals() : QObject()
-    {
-    }
+EasyGlobalSignals::EasyGlobalSignals()
+  : QObject() {
+}
 
-    EasyGlobalSignals::~EasyGlobalSignals()
-    {
-    }
+EasyGlobalSignals::~EasyGlobalSignals() {
+}
 
-} // END of namespace profiler_gui.
+}  // END of namespace profiler_gui.
 
 //////////////////////////////////////////////////////////////////////////

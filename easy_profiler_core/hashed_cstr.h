@@ -9,7 +9,7 @@
 *                   : These strings may be used as optimized keys for std::unordered_map.
 * ----------------- :
 * change log        : * 2016/09/11 Victor Zarubkin: Initial commit. Moved sources from reader.cpp
-*                   : 
+*                   :
 *                   : *
 * ----------------- :
 * license           : Lightweight profiler library for c++
@@ -24,21 +24,21 @@
 *                   :
 *                   : Permission is hereby granted, free of charge, to any person obtaining a copy
 *                   : of this software and associated documentation files (the "Software"), to deal
-*                   : in the Software without restriction, including without limitation the rights 
-*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-*                   : of the Software, and to permit persons to whom the Software is furnished 
+*                   : in the Software without restriction, including without limitation the rights
+*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+*                   : of the Software, and to permit persons to whom the Software is furnished
 *                   : to do so, subject to the following conditions:
-*                   : 
-*                   : The above copyright notice and this permission notice shall be included in all 
+*                   :
+*                   : The above copyright notice and this permission notice shall be included in all
 *                   : copies or substantial portions of the Software.
-*                   : 
-*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+*                   :
+*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 *                   : USE OR OTHER DEALINGS IN THE SOFTWARE.
-*                   : 
+*                   :
 *                   : The Apache License, Version 2.0 (the "License")
 *                   :
 *                   : You may not use this file except in compliance with the License.
@@ -56,15 +56,15 @@
 #ifndef EASY_PROFILER__HASHED_CSTR__H_
 #define EASY_PROFILER__HASHED_CSTR__H_
 
-#include <functional>
 #include <string.h>
+#include <functional>
 #include <string>
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-#if 0 == 1//defined(_MSC_VER)// && _MSC_VER >= 1800
-# define EASY_PROFILER_HASHED_CSTR_DEFINED
+#if 0 == 1  // defined(_MSC_VER)// && _MSC_VER >= 1800
+#define EASY_PROFILER_HASHED_CSTR_DEFINED
 
 namespace profiler {
 
@@ -197,7 +197,7 @@ namespace std {
 
 } // END of namespace std.
 
-#else ////////////////////////////////////////////////////////////////////
+#else  ////////////////////////////////////////////////////////////////////
 
 // TODO: Create hashed_cstr for Linux (need to use Linux version of std::_Hash_seq)
 
@@ -205,94 +205,94 @@ namespace std {
 
 namespace profiler {
 
-    class hashed_stdstring
-    {
-        ::std::string m_str;
-        size_t       m_hash;
+class hashed_stdstring {
+  ::std::string m_str;
+  size_t m_hash;
 
-    public:
+public:
+  hashed_stdstring(const char* _str)
+    : m_str(_str)
+    , m_hash(::std::hash<::std::string>()(m_str)) {
+  }
 
-        hashed_stdstring(const char* _str) : m_str(_str), m_hash(::std::hash<::std::string>()(m_str))
-        {
-        }
+  hashed_stdstring(const ::std::string& _str)
+    : m_str(_str)
+    , m_hash(::std::hash<::std::string>()(m_str)) {
+  }
 
-        hashed_stdstring(const ::std::string& _str) : m_str(_str), m_hash(::std::hash<::std::string>()(m_str))
-        {
-        }
+  hashed_stdstring(::std::string&& _str)
+    : m_str(::std::forward<::std::string&&>(_str))
+    , m_hash(::std::hash<::std::string>()(m_str)) {
+  }
 
-        hashed_stdstring(::std::string&& _str) : m_str(::std::forward<::std::string&&>(_str)), m_hash(::std::hash<::std::string>()(m_str))
-        {
-        }
+  hashed_stdstring(hashed_stdstring&& _other)
+    : m_str(::std::move(_other.m_str))
+    , m_hash(_other.m_hash) {
+  }
 
-        hashed_stdstring(hashed_stdstring&& _other) : m_str(::std::move(_other.m_str)), m_hash(_other.m_hash)
-        {
-        }
+  hashed_stdstring(const char* _str, size_t _hash_code)
+    : m_str(_str)
+    , m_hash(_hash_code) {
+  }
 
-        hashed_stdstring(const char* _str, size_t _hash_code) : m_str(_str), m_hash(_hash_code)
-        {
-        }
+  hashed_stdstring(const ::std::string& _str, size_t _hash_code)
+    : m_str(_str)
+    , m_hash(_hash_code) {
+  }
 
-        hashed_stdstring(const ::std::string& _str, size_t _hash_code) : m_str(_str), m_hash(_hash_code)
-        {
-        }
+  hashed_stdstring(::std::string&& _str, size_t _hash_code)
+    : m_str(::std::forward<::std::string&&>(_str))
+    , m_hash(_hash_code) {
+  }
 
-        hashed_stdstring(::std::string&& _str, size_t _hash_code) : m_str(::std::forward<::std::string&&>(_str)), m_hash(_hash_code)
-        {
-        }
+  hashed_stdstring(const hashed_stdstring&) = default;
+  hashed_stdstring& operator=(const hashed_stdstring&) = default;
 
-        hashed_stdstring(const hashed_stdstring&) = default;
-        hashed_stdstring& operator = (const hashed_stdstring&) = default;
+  hashed_stdstring& operator=(hashed_stdstring&& _other) {
+    m_str = ::std::move(_other.m_str);
+    m_hash = _other.m_hash;
+    return *this;
+  }
 
-        hashed_stdstring& operator = (hashed_stdstring&& _other)
-        {
-            m_str = ::std::move(_other.m_str);
-            m_hash = _other.m_hash;
-            return *this;
-        }
+  inline bool operator==(const hashed_stdstring& _other) const {
+    return m_hash == _other.m_hash && m_str == _other.m_str;
+  }
 
-        inline bool operator == (const hashed_stdstring& _other) const
-        {
-            return m_hash == _other.m_hash && m_str == _other.m_str;
-        }
+  inline bool operator!=(const hashed_stdstring& _other) const {
+    return !operator==(_other);
+  }
 
-        inline bool operator != (const hashed_stdstring& _other) const
-        {
-            return !operator == (_other);
-        }
+  inline size_t hcode() const {
+    return m_hash;
+  }
 
-        inline size_t hcode() const
-        {
-            return m_hash;
-        }
+  inline const char* c_str() const {
+    return m_str.c_str();
+  }
 
-        inline const char* c_str() const
-        {
-            return m_str.c_str();
-        }
+  inline size_t size() const {
+    return m_str.size();
+  }
 
-        inline size_t size() const
-        {
-            return m_str.size();
-        }
+};  // END of class hashed_stdstring.
 
-    }; // END of class hashed_stdstring.
-
-} // END of namespace profiler.
+}  // END of namespace profiler.
 
 namespace std {
 
-    /** \brief Simply returns precalculated hash of a std::string. */
-    template <> struct hash<::profiler::hashed_stdstring> {
-        typedef ::profiler::hashed_stdstring argument_type;
-        typedef size_t                         result_type;
-        inline size_t operator () (const ::profiler::hashed_stdstring& _str) const {
-            return _str.hcode();
-        }
-    };
+/** \brief Simply returns precalculated hash of a std::string. */
+template <>
+struct hash<::profiler::hashed_stdstring> {
+  typedef ::profiler::hashed_stdstring argument_type;
+  typedef size_t result_type;
+  inline size_t operator()(const ::profiler::hashed_stdstring& _str) const {
+    return _str.hcode();
+  }
+};
 
-} // END of namespace std.
+}  // END of namespace std.
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-#endif // EASY_PROFILER__HASHED_CSTR__H_
+#endif  // EASY_PROFILER__HASHED_CSTR__H_

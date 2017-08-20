@@ -8,7 +8,7 @@
 * description       : The file contains definition of output stream helpers.
 * ----------------- :
 * change log        : * 2016/09/11 Victor Zarubkin: Initial commit. Moved sources from profiler_manager.h/.cpp
-*                   : 
+*                   :
 *                   : *
 * ----------------- :
 * license           : Lightweight profiler library for c++
@@ -23,21 +23,21 @@
 *                   :
 *                   : Permission is hereby granted, free of charge, to any person obtaining a copy
 *                   : of this software and associated documentation files (the "Software"), to deal
-*                   : in the Software without restriction, including without limitation the rights 
-*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-*                   : of the Software, and to permit persons to whom the Software is furnished 
+*                   : in the Software without restriction, including without limitation the rights
+*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+*                   : of the Software, and to permit persons to whom the Software is furnished
 *                   : to do so, subject to the following conditions:
-*                   : 
-*                   : The above copyright notice and this permission notice shall be included in all 
+*                   :
+*                   : The above copyright notice and this permission notice shall be included in all
 *                   : copies or substantial portions of the Software.
-*                   : 
-*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+*                   :
+*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 *                   : USE OR OTHER DEALINGS IN THE SOFTWARE.
-*                   : 
+*                   :
 *                   : The Apache License, Version 2.0 (the "License")
 *                   :
 *                   : You may not use this file except in compliance with the License.
@@ -55,61 +55,55 @@
 #ifndef EASY_PROFILER__OUTPUT_STREAM__H_
 #define EASY_PROFILER__OUTPUT_STREAM__H_
 
-#include <sstream>
 #include <string.h>
+#include <sstream>
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
 namespace profiler {
 
-    class OStream
-    {
-        ::std::stringstream m_stream;
+class OStream {
+  ::std::stringstream m_stream;
 
-    public:
+public:
+  explicit OStream()
+    : m_stream(std::ios_base::out | std::ios_base::binary) {
+  }
 
-        explicit OStream() : m_stream(std::ios_base::out | std::ios_base::binary)
-        {
+  template <typename T>
+  void write(const char* _data, T _size) {
+    m_stream.write(_data, _size);
+  }
 
-        }
+  template <class T>
+  void write(const T& _data) {
+    m_stream.write((const char*)&_data, sizeof(T));
+  }
 
-        template <typename T> void write(const char* _data, T _size)
-        {
-            m_stream.write(_data, _size);
-        }
+  ::std::stringstream& stream() {
+    return m_stream;
+  }
 
-        template <class T> void write(const T& _data)
-        {
-            m_stream.write((const char*)&_data, sizeof(T));
-        }
+  const ::std::stringstream& stream() const {
+    return m_stream;
+  }
 
-        ::std::stringstream& stream()
-        {
-            return m_stream;
-        }
-
-        const ::std::stringstream& stream() const
-        {
-            return m_stream;
-        }
-
-        void clear()
-        {
+  void clear() {
 #if defined(__GNUC__) && __GNUC__ < 5
-            // gcc 4 has a known bug which has been solved in gcc 5:
-            // std::stringstream has no swap() method :(
-            m_stream.str(::std::string());
+    // gcc 4 has a known bug which has been solved in gcc 5:
+    // std::stringstream has no swap() method :(
+    m_stream.str(::std::string());
 #else
-            ::std::stringstream().swap(m_stream);
+    ::std::stringstream().swap(m_stream);
 #endif
-        }
+  }
 
-    }; // END of class OStream.
+};  // END of class OStream.
 
-} // END of namespace profiler.
+}  // END of namespace profiler.
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-#endif // EASY_PROFILER__OUTPUT_STREAM__H_
+#endif  // EASY_PROFILER__OUTPUT_STREAM__H_

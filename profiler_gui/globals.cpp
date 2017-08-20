@@ -61,59 +61,55 @@
 
 namespace profiler_gui {
 
-    EasyGlobals& EasyGlobals::instance()
-    {
-        // It's okay even without C++11 "magic statics" feature because first call happens
-        // on application initialization - there is only one thread and no data races occur.
-        static EasyGlobals globals;
-        return globals;
-    }
+EasyGlobals& EasyGlobals::instance() {
+  // It's okay even without C++11 "magic statics" feature because first call happens
+  // on application initialization - there is only one thread and no data races occur.
+  static EasyGlobals globals;
+  return globals;
+}
 
-    EasyGlobals::EasyGlobals()
-        : begin_time(0)
-        , selected_thread(0U)
-        , selected_block(::profiler_gui::numeric_max<decltype(selected_block)>())
-        , selected_block_id(::profiler_gui::numeric_max<decltype(selected_block_id)>())
-        , version(0)
-        , frame_time(16700)
-        , blocks_spacing(0)
-        , blocks_size_min(2)
-        , blocks_narrow_size(20)
-        , max_fps_history(90)
-        , fps_timer_interval(500)
-        , fps_widget_line_width(2)
-        , chrono_text_position(ChronoTextPosition_Top)
-        , time_units(TimeUnits_ms)
-        , connected(false)
-        , fps_enabled(true)
-        , use_decorated_thread_name(false)
-        , hex_thread_id(false)
-        , enable_event_markers(true)
-        , enable_statistics(true)
-        , enable_zero_length(true)
-        , add_zero_blocks_to_hierarchy(false)
-        , draw_graphics_items_borders(true)
-        , hide_narrow_children(false)
-        , hide_minsize_blocks(false)
-        , display_only_relevant_stats(true)
-        , collapse_items_on_tree_close(false)
-        , all_items_expanded_by_default(true)
-        , only_current_thread_hierarchy(false)
-        , highlight_blocks_with_same_id(true)
-        , selecting_block_changes_thread(true)
-        , auto_adjust_histogram_height(true)
-        , display_only_frames_on_histogram(false)
-        , bind_scene_and_tree_expand_status(true)
-        , bg_font(::profiler_gui::EFont("Helvetica", 10, QFont::Bold))
-        , chronometer_font(::profiler_gui::EFont("Helvetica", 16, QFont::Bold))
-        , items_font(::profiler_gui::EFont("Helvetica", 10, QFont::Medium))
-        , selected_item_font(::profiler_gui::EFont("Helvetica", 10, QFont::Medium))
-    {
+EasyGlobals::EasyGlobals()
+  : begin_time(0)
+  , selected_thread(0U)
+  , selected_block(::profiler_gui::numeric_max<decltype(selected_block)>())
+  , selected_block_id(::profiler_gui::numeric_max<decltype(selected_block_id)>())
+  , version(0)
+  , frame_time(16700)
+  , blocks_spacing(0)
+  , blocks_size_min(2)
+  , blocks_narrow_size(20)
+  , max_fps_history(90)
+  , fps_timer_interval(500)
+  , fps_widget_line_width(2)
+  , chrono_text_position(ChronoTextPosition_Top)
+  , time_units(TimeUnits_ms)
+  , connected(false)
+  , fps_enabled(true)
+  , use_decorated_thread_name(false)
+  , hex_thread_id(false)
+  , enable_event_markers(true)
+  , enable_statistics(true)
+  , enable_zero_length(true)
+  , add_zero_blocks_to_hierarchy(false)
+  , draw_graphics_items_borders(true)
+  , hide_narrow_children(false)
+  , hide_minsize_blocks(false)
+  , display_only_relevant_stats(true)
+  , collapse_items_on_tree_close(false)
+  , all_items_expanded_by_default(true)
+  , only_current_thread_hierarchy(false)
+  , highlight_blocks_with_same_id(true)
+  , selecting_block_changes_thread(true)
+  , auto_adjust_histogram_height(true)
+  , display_only_frames_on_histogram(false)
+  , bind_scene_and_tree_expand_status(true)
+  , bg_font(::profiler_gui::EFont("Helvetica", 10, QFont::Bold))
+  , chronometer_font(::profiler_gui::EFont("Helvetica", 16, QFont::Bold))
+  , items_font(::profiler_gui::EFont("Helvetica", 10, QFont::Medium))
+  , selected_item_font(::profiler_gui::EFont("Helvetica", 10, QFont::Medium)) {
+}
 
-    }
-
-} // END of namespace profiler_gui.
+}  // END of namespace profiler_gui.
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-

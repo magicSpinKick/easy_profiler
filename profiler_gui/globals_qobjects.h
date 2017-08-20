@@ -23,21 +23,21 @@
 *                   :
 *                   : Permission is hereby granted, free of charge, to any person obtaining a copy
 *                   : of this software and associated documentation files (the "Software"), to deal
-*                   : in the Software without restriction, including without limitation the rights 
-*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-*                   : of the Software, and to permit persons to whom the Software is furnished 
+*                   : in the Software without restriction, including without limitation the rights
+*                   : to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+*                   : of the Software, and to permit persons to whom the Software is furnished
 *                   : to do so, subject to the following conditions:
-*                   : 
-*                   : The above copyright notice and this permission notice shall be included in all 
+*                   :
+*                   : The above copyright notice and this permission notice shall be included in all
 *                   : copies or substantial portions of the Software.
-*                   : 
-*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+*                   :
+*                   : THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+*                   : INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+*                   : PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+*                   : LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+*                   : TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 *                   : USE OR OTHER DEALINGS IN THE SOFTWARE.
-*                   : 
+*                   :
 *                   : The Apache License, Version 2.0 (the "License")
 *                   :
 *                   : You may not use this file except in compliance with the License.
@@ -55,40 +55,38 @@
 #ifndef EASY_GLOBALS_QOBJECTS_H
 #define EASY_GLOBALS_QOBJECTS_H
 
-#include <QObject>
 #include <easy/profiler.h>
+#include <QObject>
 
 namespace profiler_gui {
 
-    class EasyGlobalSignals Q_DECL_FINAL : public QObject
-    {
-        Q_OBJECT
+class EasyGlobalSignals Q_DECL_FINAL : public QObject {
+  Q_OBJECT
 
-    public:
+public:
+  EasyGlobalSignals();
+  virtual ~EasyGlobalSignals();
 
-        EasyGlobalSignals();
-        virtual ~EasyGlobalSignals();
+signals:
 
-    signals:
+  void selectedThreadChanged(::profiler::thread_id_t _id);
+  void selectedBlockChanged(uint32_t _block_index);
+  void selectedBlockIdChanged(::profiler::block_id_t _id);
+  void itemsExpandStateChanged();
+  void blockStatusChanged(::profiler::block_id_t _id, ::profiler::EasyBlockStatus _status);
+  void connectionChanged(bool _connected);
+  void blocksRefreshRequired(bool);
+  void expectedFrameTimeChanged();
+  void autoAdjustHistogramChanged();
+  void displayOnlyFramesOnHistogramChanged();
+  void hierarchyFlagChanged(bool);
+  void threadNameDecorationChanged();
+  void hexThreadIdChanged();
+  void refreshRequired();
+  void blocksTreeModeChanged();
 
-        void selectedThreadChanged(::profiler::thread_id_t _id);
-        void selectedBlockChanged(uint32_t _block_index);
-        void selectedBlockIdChanged(::profiler::block_id_t _id);
-        void itemsExpandStateChanged();
-        void blockStatusChanged(::profiler::block_id_t _id, ::profiler::EasyBlockStatus _status);
-        void connectionChanged(bool _connected);
-        void blocksRefreshRequired(bool);
-        void expectedFrameTimeChanged();
-        void autoAdjustHistogramChanged();
-        void displayOnlyFramesOnHistogramChanged();
-        void hierarchyFlagChanged(bool);
-        void threadNameDecorationChanged();
-        void hexThreadIdChanged();
-        void refreshRequired();
-        void blocksTreeModeChanged();
+};  // END of class EasyGlobalSignals.
 
-    }; // END of class EasyGlobalSignals.
+}  // END of namespace profiler_gui.
 
-} // END of namespace profiler_gui.
-
-#endif // EASY_GLOBALS_QOBJECTS_H
+#endif  // EASY_GLOBALS_QOBJECTS_H

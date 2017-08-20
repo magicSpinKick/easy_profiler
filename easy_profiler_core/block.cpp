@@ -48,193 +48,157 @@
 *                   : limitations under the License.
 ************************************************************************/
 
-#include "profile_manager.h"
 #include "current_time.h"
+#include "profile_manager.h"
 
 using namespace profiler;
 
 #ifndef EASY_PROFILER_API_DISABLED
-Event::Event(timestamp_t _begin_time) : m_begin(_begin_time), m_end(0)
-{
-
+Event::Event(timestamp_t _begin_time)
+  : m_begin(_begin_time)
+  , m_end(0) {
 }
 
-Event::Event(timestamp_t _begin_time, timestamp_t _end_time) : m_begin(_begin_time), m_end(_end_time)
-{
-
+Event::Event(timestamp_t _begin_time, timestamp_t _end_time)
+  : m_begin(_begin_time)
+  , m_end(_end_time) {
 }
 
 BaseBlockData::BaseBlockData(timestamp_t _begin_time, block_id_t _descriptor_id)
-    : Event(_begin_time)
-    , m_id(_descriptor_id)
-{
-
+  : Event(_begin_time)
+  , m_id(_descriptor_id) {
 }
 
 BaseBlockData::BaseBlockData(timestamp_t _begin_time, timestamp_t _end_time, block_id_t _descriptor_id)
-    : Event(_begin_time, _end_time)
-    , m_id(_descriptor_id)
-{
-
+  : Event(_begin_time, _end_time)
+  , m_id(_descriptor_id) {
 }
 
 Block::Block(Block&& that)
-    : BaseBlockData(that.m_begin, that.m_id)
-    , m_name(that.m_name)
-    , m_status(that.m_status)
-    , m_isScoped(that.m_isScoped)
-{
-    m_end = that.m_end;
-    that.m_end = that.m_begin;
+  : BaseBlockData(that.m_begin, that.m_id)
+  , m_name(that.m_name)
+  , m_status(that.m_status)
+  , m_isScoped(that.m_isScoped) {
+  m_end = that.m_end;
+  that.m_end = that.m_begin;
 }
 
 Block::Block(timestamp_t _begin_time, block_id_t _descriptor_id, const char* _runtimeName)
-    : BaseBlockData(_begin_time, _descriptor_id)
-    , m_name(_runtimeName)
-    , m_status(::profiler::ON)
-    , m_isScoped(true)
-{
-
+  : BaseBlockData(_begin_time, _descriptor_id)
+  , m_name(_runtimeName)
+  , m_status(::profiler::ON)
+  , m_isScoped(true) {
 }
 
 Block::Block(timestamp_t _begin_time, timestamp_t _end_time, block_id_t _descriptor_id, const char* _runtimeName)
-    : BaseBlockData(_begin_time, _end_time, _descriptor_id)
-    , m_name(_runtimeName)
-    , m_status(::profiler::ON)
-    , m_isScoped(true)
-{
-
+  : BaseBlockData(_begin_time, _end_time, _descriptor_id)
+  , m_name(_runtimeName)
+  , m_status(::profiler::ON)
+  , m_isScoped(true) {
 }
 
 Block::Block(const BaseBlockDescriptor* _descriptor, const char* _runtimeName, bool _scoped)
-    : BaseBlockData(1ULL, _descriptor->id())
-    , m_name(_runtimeName)
-    , m_status(_descriptor->status())
-    , m_isScoped(_scoped)
-{
-
+  : BaseBlockData(1ULL, _descriptor->id())
+  , m_name(_runtimeName)
+  , m_status(_descriptor->status())
+  , m_isScoped(_scoped) {
 }
 
-void Block::start()
-{
-    m_begin = getCurrentTime();
+void Block::start() {
+  m_begin = getCurrentTime();
 }
 
-void Block::start(timestamp_t _time)
-{
-    m_begin = _time;
+void Block::start(timestamp_t _time) {
+  m_begin = _time;
 }
 
-void Block::finish()
-{
-    m_end = getCurrentTime();
+void Block::finish() {
+  m_end = getCurrentTime();
 }
 
-void Block::finish(timestamp_t _time)
-{
-    m_end = _time;
+void Block::finish(timestamp_t _time) {
+  m_end = _time;
 }
 
-Block::~Block()
-{
-    if (!finished())
-        ::profiler::endBlock();
+Block::~Block() {
+  if (!finished())
+    ::profiler::endBlock();
 }
 #else
-Event::Event(timestamp_t) : m_begin(0), m_end(0)
-{
-
+Event::Event(timestamp_t)
+  : m_begin(0)
+  , m_end(0) {
 }
 
-Event::Event(timestamp_t, timestamp_t) : m_begin(0), m_end(0)
-{
-
+Event::Event(timestamp_t, timestamp_t)
+  : m_begin(0)
+  , m_end(0) {
 }
 
 BaseBlockData::BaseBlockData(timestamp_t, block_id_t)
-    : Event(0, 0)
-    , m_id(~0U)
-{
-
+  : Event(0, 0)
+  , m_id(~0U) {
 }
 
 BaseBlockData::BaseBlockData(timestamp_t, timestamp_t, block_id_t)
-    : Event(0, 0)
-    , m_id(~0U)
-{
-
+  : Event(0, 0)
+  , m_id(~0U) {
 }
 
 Block::Block(Block&& that)
-    : BaseBlockData(0, ~0U)
-    , m_name("")
-    , m_status(::profiler::OFF)
-    , m_isScoped(that.m_isScoped)
-{
+  : BaseBlockData(0, ~0U)
+  , m_name("")
+  , m_status(::profiler::OFF)
+  , m_isScoped(that.m_isScoped) {
 }
 
 Block::Block(timestamp_t, block_id_t, const char*)
-    : BaseBlockData(0, ~0U)
-    , m_name("")
-    , m_status(::profiler::OFF)
-    , m_isScoped(true)
-{
-
+  : BaseBlockData(0, ~0U)
+  , m_name("")
+  , m_status(::profiler::OFF)
+  , m_isScoped(true) {
 }
 
 Block::Block(timestamp_t, timestamp_t, block_id_t, const char*)
-    : BaseBlockData(0, ~0U)
-    , m_name("")
-    , m_status(::profiler::OFF)
-    , m_isScoped(true)
-{
-
+  : BaseBlockData(0, ~0U)
+  , m_name("")
+  , m_status(::profiler::OFF)
+  , m_isScoped(true) {
 }
 
 Block::Block(const BaseBlockDescriptor*, const char*, bool _scoped)
-    : BaseBlockData(0, ~0U)
-    , m_name("")
-    , m_status(::profiler::OFF)
-    , m_isScoped(_scoped)
-{
-
+  : BaseBlockData(0, ~0U)
+  , m_name("")
+  , m_status(::profiler::OFF)
+  , m_isScoped(_scoped) {
 }
 
-void Block::start()
-{
+void Block::start() {
 }
 
-void Block::start(timestamp_t)
-{
+void Block::start(timestamp_t) {
 }
 
-void Block::finish()
-{
+void Block::finish() {
 }
 
-void Block::finish(timestamp_t)
-{
+void Block::finish(timestamp_t) {
 }
 
-Block::~Block()
-{
+Block::~Block() {
 }
 #endif
 
 //////////////////////////////////////////////////////////////////////////
 
 CSwitchEvent::CSwitchEvent(timestamp_t _begin_time, thread_id_t _tid)
-    : Event(_begin_time)
-    , m_thread_id(_tid)
-{
-
+  : Event(_begin_time)
+  , m_thread_id(_tid) {
 }
 
 CSwitchBlock::CSwitchBlock(timestamp_t _begin_time, thread_id_t _tid, const char* _runtimeName)
-    : CSwitchEvent(_begin_time, _tid)
-    , m_name(_runtimeName)
-{
-
+  : CSwitchEvent(_begin_time, _tid)
+  , m_name(_runtimeName) {
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -58,28 +58,22 @@
 //////////////////////////////////////////////////////////////////////////
 
 EasyQTimer::EasyQTimer()
-    : QObject()
-{
-    connect(&m_timer, &QTimer::timeout, [this](){ m_handler(); });
+  : QObject() {
+  connect(&m_timer, &QTimer::timeout, [this]() { m_handler(); });
 }
 
 EasyQTimer::EasyQTimer(::std::function<void()>&& _handler, bool _isSignleShot)
-    : QObject()
-    , m_handler(::std::forward<::std::function<void()>&&>(_handler))
-{
-    m_timer.setSingleShot(_isSignleShot);
-    connect(&m_timer, &QTimer::timeout, [this](){ m_handler(); });
+  : QObject()
+  , m_handler(::std::forward<::std::function<void()>&&>(_handler)) {
+  m_timer.setSingleShot(_isSignleShot);
+  connect(&m_timer, &QTimer::timeout, [this]() { m_handler(); });
 }
 
-EasyQTimer::~EasyQTimer()
-{
-
+EasyQTimer::~EasyQTimer() {
 }
 
-void EasyQTimer::setHandler(::std::function<void()>&& _handler)
-{
-    m_handler = _handler;
+void EasyQTimer::setHandler(::std::function<void()>&& _handler) {
+  m_handler = _handler;
 }
 
 //////////////////////////////////////////////////////////////////////////
-
