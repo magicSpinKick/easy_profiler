@@ -523,7 +523,7 @@ public:
         // The maximum chunk offset is N-sizeof(uint16_t) b/c, if we hit that (or go past),
         // there is either no space left, 1 byte left, or 2 bytes left, all of which are
         // too small to cary more than a zero-sized element.
-        constexpr int_fast32_t MAX_CHUNK_OFFSET = (int_fast32_t)N-sizeof(uint16_t);
+        int_fast32_t MAX_CHUNK_OFFSET = (int_fast32_t)N-sizeof(uint16_t);
 
         chunk* current = m_chunks.last;
         do {
